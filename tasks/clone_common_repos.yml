@@ -1,0 +1,17 @@
+- name: Clone common repositories
+  vars:
+    username: "lbragstad"
+  hosts: all
+  tasks:
+    - name: Clone repositories
+      git:
+        repo: "https://github.com/{{ item.repo }}"
+        dest: "~/{{ item.name }}"
+      with_items:
+        - { repo: 'openstack/keystone', name: 'keystone' }
+        - { repo: 'openstack/keystone-specs', name: 'keystone-specs' }
+        - { repo: 'openstack/keystonemiddleware', name: 'keystonemiddleware' }
+        - { repo: 'openstack/keystoneauth', name: 'keystoneauth' }
+        - { repo: 'openstack/governance', name: 'governance' }
+        - { repo: 'openstack/releases', name: 'releases' }
+        - { repo: 'openstack/requirements', name: 'requirements' }

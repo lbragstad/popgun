@@ -56,10 +56,3 @@
         user: "{{ username }}"
         state: "present"
         key: "{{ lookup('file', '/home/lbragstad/.ssh/id_rsa.pub') }}"
-
-    - name: Create a new ssh key pair
-      become_user: "{{ username }}"
-      become_method: "su"
-      shell: "ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -N ''"
-      args:
-        creates: "~/.ssh/id_rsa"
