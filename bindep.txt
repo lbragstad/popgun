@@ -1,0 +1,4 @@
+redhat-rpm-config       [platform:fedora]
+python-devel            [platform:fedora]
+openssl-devel           [platform:fedora]
+sshpass                 [platform:fedora]

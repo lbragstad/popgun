@@ -1,0 +1,14 @@
+---
+
+# Run this playbook to allow ssh access as the root user of the container
+# ansible-playbook tasks/bootstrap-ssh-key.yml -i "192.168.122.150," -u ubuntu
+# -e 'ansible_python_interpreter=/usr/bin/python3' -K -k
+- name: Bootstrap root user with authorized keys
+  hosts: all
+  tasks:
+    - name: Boostrap authorized key for root user
+      authorized_key:
+        user: "root"
+        state: "present"
+        key: "{{ lookup('file', '/home/lbragstad/.ssh/id_rsa.pub') }}"
+      become: "true"

@@ -1,0 +1,13 @@
+---
+
+# ansible-playbook tasks/generate_ssh_keys.yml -i "192.168.122.150," -u root -e
+# 'ansible_python_interpreter=/usr/bin/python3'
+
+- name: Bootstrap a container
+  vars:
+  hosts: all
+  tasks:
+    - name: Create a new ssh key pair
+      shell: "ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -N ''"
+      args:
+        creates: "~/.ssh/id_rsa"

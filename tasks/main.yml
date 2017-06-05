@@ -1,1 +1,65 @@
 ---
+
+# FIXME(lbragstad): Convert this to use ansible and accept the distribution,
+# release and container name as arguments.
+# sudo lxc-create -n test -t ubuntu -- -r xenial
+# sudo lxc-start -n test
+#
+# Run playbook with the following:
+# ansible-playbook tasks/main.yml -i "192.168.122.150," -u root -e
+# 'ansible_python_interpreter=/usr/bin/python3'
+# - name: Creating container
+#   user: root
+#   lxc_container:
+#     name: "{{ container_name }}"
+#     template: "{{ distro }}"
+#     state: "started"
+#     template_options: "--release {{ release }}"
+#
+# - name: Wait for container connectivity
+#   wait_for_connection:
+#
+
+- name: Bootstrap a container
+  vars:
+    username: "lbragstad"
+    useful_packages:
+      - git
+      - vim
+      - tmux
+      - htop
+  hosts: all
+  tasks:
+    - name: Create a user
+      user:
+        name: "{{ username }}"
+        groups: "sudo"
+        shell: "/bin/bash"
+
+    - name: give passwordless sudo to yourself
+      lineinfile:
+        dest: "/etc/sudoers"
+        state: "present"
+        regexp: '^%{{ username }} ALL\='
+        line: "%{{ username }} ALL=(ALL) NOPASSWD:ALL"
+        validate: "visudo -cf %s"
+
+    - name: Install basic tools
+      apt:
+        pkg: "{{ item }}"
+        state: "present"
+        update_cache: yes
+      with_items: "{{ useful_packages }}"
+
+    - name: Set authorized key
+      authorized_key:
+        user: "{{ username }}"
+        state: "present"
+        key: "{{ lookup('file', '/home/lbragstad/.ssh/id_rsa.pub') }}"
+
+    - name: Create a new ssh key pair
+      become_user: "{{ username }}"
+      become_method: "su"
+      shell: "ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -N ''"
+      args:
+        creates: "~/.ssh/id_rsa"
