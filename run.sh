@@ -27,6 +27,6 @@ ansible-playbook tasks/bootstrap_ssh_keys.yml -i "$IP," -u ubuntu -e 'ansible_py
 
 # Create a new set of ssh keys
 
-ansible-playbook tasks/generate_ssh_keys.yml -i "$IP," -u root -e 'ansible_python_interpreter=/usr/bin/python3'
+ansible-playbook tasks/generate_ssh_keys.yml -i "$IP," -u `whoami` -e 'ansible_python_interpreter=/usr/bin/python3'
 
 deactivate

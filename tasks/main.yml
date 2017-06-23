@@ -36,7 +36,7 @@
         groups: "sudo"
         shell: "/bin/bash"
 
-    - name: give passwordless sudo to yourself
+    - name: Give passwordless sudo to yourself
       lineinfile:
         dest: "/etc/sudoers"
         state: "present"
